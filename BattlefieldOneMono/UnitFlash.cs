@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 
 namespace BattlefieldOneMono
 {

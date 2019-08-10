@@ -1,5 +1,6 @@
 ﻿using System;
 using Autofac;
+using BattlefieldOneMono.Interfaces;
 
 namespace BattlefieldOneMono
 {

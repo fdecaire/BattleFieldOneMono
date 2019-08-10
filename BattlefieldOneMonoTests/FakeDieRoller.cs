@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using BattlefieldOneMono;
+using BattlefieldOneMono.Interfaces;
 
 namespace BattlefieldOneXNATests
 {

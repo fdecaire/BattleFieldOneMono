@@ -1,4 +1,5 @@
 ﻿using BattlefieldOneMono.Constants;
+using BattlefieldOneMono.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

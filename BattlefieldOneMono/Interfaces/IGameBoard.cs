@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace BattlefieldOneMono
+namespace BattlefieldOneMono.Interfaces
 {
 	public interface IGameBoard
 	{

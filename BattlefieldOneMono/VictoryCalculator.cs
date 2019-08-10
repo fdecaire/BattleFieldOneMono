@@ -1,4 +1,6 @@
-﻿namespace BattlefieldOneMono
+﻿using BattlefieldOneMono.Interfaces;
+
+namespace BattlefieldOneMono
 {
 	public class VictoryCalculator : IVictoryCalculator
 	{

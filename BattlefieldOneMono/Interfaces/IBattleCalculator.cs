@@ -1,6 +1,6 @@
 ﻿using BattlefieldOneMono.Constants;
 
-namespace BattlefieldOneMono
+namespace BattlefieldOneMono.Interfaces
 {
 	public interface IBattleCalculator
 	{
