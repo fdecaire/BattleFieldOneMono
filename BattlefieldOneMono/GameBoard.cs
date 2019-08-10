@@ -64,7 +64,7 @@ namespace BattlefieldOneMono
 		public void CreateMap()
 		{
 			var gameFileReader = new GameFileReader(_terrainMap,_units);
-			gameFileReader.ReadGameFile("Game04.map");
+			gameFileReader.ReadGameFile(@"BattlefieldOneMono.GameMaps.Game04.map");
 			RecomputeView();
 
 			if (_noMaskView)

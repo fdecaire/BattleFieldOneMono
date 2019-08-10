@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 
 namespace BattlefieldOneMono
 {
@@ -17,28 +18,38 @@ namespace BattlefieldOneMono
 
 		public void ReadGameFile(string fileName)
 		{
-			using (var file = new StreamReader(fileName))
-			{
-				string line;
-				while ((line = file.ReadLine()) != null)
-				{
-					switch (line.ToLower())
-					{
-						case "map":
-							DecodeMap(file);
-							break;
+            var assembly = Assembly.GetCallingAssembly();
 
-						case "units":
-							DecodeUnits(file);
-							break;
+            using (var stream = assembly.GetManifestResourceStream(fileName))
+            {
+                if (stream == null)
+                {
+                    //TODO: throw an error here
+                }
 
-						case "roads":
-							DecodeRoads(file);
-							break;
-					}
-				}
-			}
-		}
+                using (var file = new StreamReader(stream))
+                {
+                    string line;
+                    while ((line = file.ReadLine()) != null)
+                    {
+                        switch (line.ToLower())
+                        {
+                            case "map":
+                                DecodeMap(file);
+                                break;
+
+                            case "units":
+                                DecodeUnits(file);
+                                break;
+
+                            case "roads":
+                                DecodeRoads(file);
+                                break;
+                        }
+                    }
+                }
+            }
+        }
 
 		private void DecodeRoads(StreamReader file)
 		{
