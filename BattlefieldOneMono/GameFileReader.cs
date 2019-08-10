@@ -7,7 +7,7 @@ namespace BattlefieldOneMono
 	{
 		private readonly ITerrainMap _terrainMap;
 		private readonly IUnitList _units;
-		private static Random _rnd = new Random();
+		private static readonly Random Rnd = new Random();
 
 		public GameFileReader(ITerrainMap terrainMap, IUnitList unitList)
 		{
@@ -43,19 +43,19 @@ namespace BattlefieldOneMono
 		private void DecodeRoads(StreamReader file)
 		{
 			var line = file.ReadLine();
-			int totalRoads = int.Parse(line);
+			var totalRoads = int.Parse(line);
 
-			for (int i = 0; i < totalRoads; i++)
+			for (var i = 0; i < totalRoads; i++)
 			{
 				line = file.ReadLine();
-				string[] roadEnds = line.Split('-');
-				string[] roadStart = roadEnds[0].Split(',');
-				string[] roadEnd = roadEnds[1].Split(',');
+				var roadEnds = line.Split('-');
+				var roadStart = roadEnds[0].Split(',');
+				var roadEnd = roadEnds[1].Split(',');
 
-				int startX = int.Parse(roadStart[0]);
-				int startY = int.Parse(roadStart[1]);
-				int endX = int.Parse(roadEnd[0]);
-				int endY = int.Parse(roadEnd[1]);
+				var startX = int.Parse(roadStart[0]);
+				var startY = int.Parse(roadStart[1]);
+				var endX = int.Parse(roadEnd[0]);
+				var endY = int.Parse(roadEnd[1]);
 
 				_terrainMap.PlotRoad(startX, startY, endX, endY);
 			}
@@ -64,18 +64,18 @@ namespace BattlefieldOneMono
 		private void DecodeUnits(StreamReader file)
 		{
 			var line = file.ReadLine();
-			int totalUnits = int.Parse(line);
+			var totalUnits = int.Parse(line);
 
-			for (int i = 0; i < totalUnits; i++)
+			for (var i = 0; i < totalUnits; i++)
 			{
 				line = file.ReadLine();
-				string[] rawUnitData = line.Split(',');
+				var rawUnitData = line.Split(',');
 
 				//TODO: verify that there are 4 cells
 				//16, -7, 0, G
-				int x = int.Parse(rawUnitData[0]);
-				int y = int.Parse(rawUnitData[1]);
-				int type = int.Parse(rawUnitData[2]);
+				var x = int.Parse(rawUnitData[0]);
+				var y = int.Parse(rawUnitData[1]);
+				var type = int.Parse(rawUnitData[2]);
 
 				AddUnit(x, y, type, rawUnitData[3].Trim().ToLower() == "a" ? NATIONALITY.USA : NATIONALITY.Germany);
 			}
@@ -106,15 +106,15 @@ namespace BattlefieldOneMono
 
 		private int TerrainDecode(string rawMapCell)
 		{
-			int segment = 0;
+			var segment = 0;
 
-			string terrainType = rawMapCell.Substring(0, 1);
-			string terrain = rawMapCell.Substring(1, rawMapCell.Length - 1);
-			int terrainNum = 0;
+			var terrainType = rawMapCell.Substring(0, 1);
+			var terrain = rawMapCell.Substring(1, rawMapCell.Length - 1);
+			var terrainNum = 0;
 
 			if (terrain == "##")
 			{
-				terrainNum = _rnd.Next(0, 5);
+				terrainNum = Rnd.Next(0, 5);
 			}
 			else
 			{
