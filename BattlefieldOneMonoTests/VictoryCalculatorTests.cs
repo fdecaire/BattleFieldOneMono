@@ -93,5 +93,42 @@ namespace BattlefieldOneMonoTests
 
 			Assert.Equal("All Allied Units Destroyed!", calc.Result());
 		}
-	}
+
+        [Fact]
+        public void TotalAlliedUnitsAlive()
+        {
+            IocContainer.Setup();
+
+            var terrainMap = new TerrainMap(new ShortestPath());
+            terrainMap.InitializeBoard(8, 8);
+
+            var unitList = new UnitList(new BattleCalculator(new DieRoller()), terrainMap);
+            unitList.Add(6, 7, 1, NATIONALITY.USA);
+            unitList.Add(3, 2, 1, NATIONALITY.USA);
+            unitList.Add(3, 3, 1, NATIONALITY.Germany);
+
+            var calc = new VictoryCalculator(terrainMap, unitList);
+
+            Assert.Equal(2,calc.TotalAlliedUnitsAlive);
+        }
+
+        [Fact]
+        public void TotalGermanUnitsAlive()
+        {
+            IocContainer.Setup();
+
+            var terrainMap = new TerrainMap(new ShortestPath());
+            terrainMap.InitializeBoard(8, 8);
+
+            var unitList = new UnitList(new BattleCalculator(new DieRoller()), terrainMap);
+            unitList.Add(6, 7, 1, NATIONALITY.Germany);
+            unitList.Add(3, 2, 1, NATIONALITY.Germany);
+            unitList.Add(3, 3, 1, NATIONALITY.Germany);
+            unitList.Add(1, 1, 1, NATIONALITY.USA);
+
+            var calc = new VictoryCalculator(terrainMap, unitList);
+
+            Assert.Equal(3, calc.TotalGermanUnitsAlive);
+        }
+    }
 }

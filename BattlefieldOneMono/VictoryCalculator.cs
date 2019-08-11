@@ -5,12 +5,10 @@ namespace BattlefieldOneMono
 {
 	public class VictoryCalculator : IVictoryCalculator
 	{
-		private int _totalAlliedCitiesToCapture = 0;
-		private int _totalGermanCitiesToCapture = 0;
-		private int _totalAlliedUnitsAlive = 0;
-		private int _totalGermanUnitsAlive = 0;
-		private int _totalGermanCitiesToDefend = 0;
-		private int _totalAlliedCitiesToDefend = 0;
+		private int _totalAlliedCitiesToCapture;
+		private int _totalGermanCitiesToCapture;
+		private int _totalGermanCitiesToDefend;
+		private int _totalAlliedCitiesToDefend;
 		private readonly ITerrainMap _terrainMap;
 		private readonly IUnitList _units;
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
@@ -35,10 +33,44 @@ namespace BattlefieldOneMono
 			_totalAlliedCitiesToDefend = totalCities;
 		}
 
-		public void GermanCitiesToDefend(int totalcities)
+		public void GermanCitiesToDefend(int totalCities)
 		{
-			_totalGermanCitiesToDefend = totalcities;
+			_totalGermanCitiesToDefend = totalCities;
 		}
+
+        public int TotalAlliedUnitsAlive
+        {
+            get
+            {
+                var total = 0;
+                foreach (var unit in _units)
+                {
+                    if (unit.Nationality == NATIONALITY.USA)
+                    {
+                        total++;
+                    }
+                }
+
+                return total;
+            }
+        }
+
+        public int TotalGermanUnitsAlive
+        {
+            get
+            {
+                var total = 0;
+                foreach (var unit in _units)
+                {
+                    if (unit.Nationality == NATIONALITY.Germany)
+                    {
+                        total++;
+                    }
+                }
+
+                return total;
+            }
+        }
 
 		public string Result()
 		{
@@ -114,33 +146,15 @@ namespace BattlefieldOneMono
                 }
 			}
 
-			// check to see if all german units destroyed
-			liTotal = 0;
-			foreach (var unit in _units)
-			{
-				if (unit.Nationality == NATIONALITY.Germany)
-				{
-					liTotal++;
-				}
-			}
-
-			if (liTotal == 0)
+            // check to see if all german units destroyed
+			if (TotalGermanUnitsAlive == 0)
 			{
                 _log.Debug("All Axis Units Destroyed!");
                 return "All Axis Units Destroyed!";
 			}
 
 			// check to see if all allied units destroyed
-			liTotal = 0;
-			foreach (var unit in _units)
-			{
-				if (unit.Nationality == NATIONALITY.USA)
-				{
-					liTotal++;
-				}
-			}
-
-			if (liTotal == 0)
+			if (TotalAlliedUnitsAlive == 0)
 			{
                 _log.Debug("All Allied Units Destroyed!");
                 return "All Allied Units Destroyed!";
