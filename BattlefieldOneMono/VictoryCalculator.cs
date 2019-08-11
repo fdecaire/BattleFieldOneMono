@@ -1,4 +1,5 @@
 ﻿using BattlefieldOneMono.Interfaces;
+using NLog;
 
 namespace BattlefieldOneMono
 {
@@ -12,8 +13,9 @@ namespace BattlefieldOneMono
 		private int _totalAlliedCitiesToDefend = 0;
 		private readonly ITerrainMap _terrainMap;
 		private readonly IUnitList _units;
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-		public VictoryCalculator(ITerrainMap terrainMap, IUnitList units)
+        public VictoryCalculator(ITerrainMap terrainMap, IUnitList units)
 		{
 			_terrainMap = terrainMap;
 			_units = units;
@@ -57,6 +59,7 @@ namespace BattlefieldOneMono
 			{
 				if (liTotal < _totalGermanCitiesToDefend)
 				{
+                    _log.Debug("Axis Forces Failed to Defend " + _totalGermanCitiesToDefend + " Cit" + (_totalGermanCitiesToDefend == 1 ? "y" : "ies") + ".  Allies Win!");
 					return "Axis Forces Failed to Defend " + _totalGermanCitiesToDefend + " Cit" + (_totalGermanCitiesToDefend == 1 ? "y" : "ies") + ".  Allies Win!";
 				}
 			}
@@ -65,14 +68,14 @@ namespace BattlefieldOneMono
 				if (liTotal >= _totalGermanCitiesToCapture)
 				{
 					if (_terrainMap.CityList.Count == liTotal)
-					{
-						return "Axis Forces Captured All Cities!";
+                    {
+                        _log.Debug("Axis Forces Captured All Cities!");
+                        return "Axis Forces Captured All Cities!";
 					}
-					else
-					{
-						return "Axis Forces Captured " + liTotal + " Cit" + (_totalGermanCitiesToCapture == 1 ? "y" : "ies") + " Needed for a Victory!";
-					}
-				}
+
+                    _log.Debug("Axis Forces Captured " + liTotal + " Cit" + (_totalGermanCitiesToCapture == 1 ? "y" : "ies") + " Needed for a Victory!");
+                    return "Axis Forces Captured " + liTotal + " Cit" + (_totalGermanCitiesToCapture == 1 ? "y" : "ies") + " Needed for a Victory!";
+                }
 			}
 
 			// check to see if allied units occupy all cities
@@ -92,7 +95,8 @@ namespace BattlefieldOneMono
 			{
 				if (liTotal < _totalAlliedCitiesToDefend)
 				{
-					return "Allies Failed to Defend " + _totalAlliedCitiesToDefend + " Cit" + (_totalAlliedCitiesToDefend == 1 ? "y" : "ies") + ".  Allies Win!";
+                    _log.Debug("Allies Failed to Defend " + _totalAlliedCitiesToDefend + " Cit" + (_totalAlliedCitiesToDefend == 1 ? "y" : "ies") + ".  Allies Win!");
+                    return "Allies Failed to Defend " + _totalAlliedCitiesToDefend + " Cit" + (_totalAlliedCitiesToDefend == 1 ? "y" : "ies") + ".  Allies Win!";
 				}
 			}
 			else
@@ -101,13 +105,13 @@ namespace BattlefieldOneMono
 				{
 					if (liTotal == _terrainMap.CityList.Count)
 					{
-						return "Allies Captured All Cities!";
+                        _log.Debug("Allies Captured All Cities!");
+                        return "Allies Captured All Cities!";
 					}
-					else
-					{
-						return "Allies Captured " + liTotal + " Citi" + (_totalAlliedCitiesToCapture == 1 ? "y" : "ies") + " Needed for a Victory!";
-					}
-				}
+
+                    _log.Debug("Allies Captured " + liTotal + " Citi" + (_totalAlliedCitiesToCapture == 1 ? "y" : "ies") + " Needed for a Victory!");
+                    return "Allies Captured " + liTotal + " Citi" + (_totalAlliedCitiesToCapture == 1 ? "y" : "ies") + " Needed for a Victory!";
+                }
 			}
 
 			// check to see if all german units destroyed
@@ -122,7 +126,8 @@ namespace BattlefieldOneMono
 
 			if (liTotal == 0)
 			{
-				return "All Axis Units Destroyed!";
+                _log.Debug("All Axis Units Destroyed!");
+                return "All Axis Units Destroyed!";
 			}
 
 			// check to see if all allied units destroyed
@@ -137,7 +142,8 @@ namespace BattlefieldOneMono
 
 			if (liTotal == 0)
 			{
-				return "All Allied Units Destroyed!";
+                _log.Debug("All Allied Units Destroyed!");
+                return "All Allied Units Destroyed!";
 			}
 
 			return "";

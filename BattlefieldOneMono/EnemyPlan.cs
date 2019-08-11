@@ -125,6 +125,11 @@ namespace BattlefieldOneMono
 					}
 				}
 
+                if (EnemyUnitAttacking != null)
+                {
+                    HandleEnemyAttackingAllied(gameTime);
+                }
+
 				// this will move the enemy unit one space at a time
 				if (NextEnemyUnitToMove != null)
 				{
@@ -142,7 +147,7 @@ namespace BattlefieldOneMono
 					NextEnemyUnitToMove = null;
 				}
 			}
-		}
+        }
 
 		private void HandleEnemyUnitMove(bool visible)
 		{

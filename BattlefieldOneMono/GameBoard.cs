@@ -2,6 +2,7 @@
 using BattlefieldOneMono.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NLog;
 
 namespace BattlefieldOneMono
 {
@@ -51,7 +52,9 @@ namespace BattlefieldOneMono
 		private int _unitFlash;
 		private const int NumberOfFlashes = 2;
 
-		public GameBoard(ITerrainMap terrainMap, IUnitList unitList, IShortestPath shortestPath, IAlliedEnemyMatrix alliedEnemyMatrix, 
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+
+        public GameBoard(ITerrainMap terrainMap, IUnitList unitList, IShortestPath shortestPath, IAlliedEnemyMatrix alliedEnemyMatrix, 
 			IVictoryCalculator victoryCalculator, IEnemyPlan enemyPlan)
 		{
 			_terrainMap = terrainMap;
@@ -525,11 +528,6 @@ namespace BattlefieldOneMono
 					}
 				}
 			}
-
-            foreach (var unit in _units)
-            {
-                unit.DrawPath();
-            }
         }
 	}
 }
