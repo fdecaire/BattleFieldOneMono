@@ -150,7 +150,6 @@ namespace BattlefieldOneMono
                         case 4:
                             if (NextEnemyUnitToMove.Movement < 0.1)
                             {
-                                //TODO: if within attack range
                                 if (_units.IsUnitWithinAttackRange(NextEnemyUnitToMove, _alliedEnemyMatrix))
                                 {
                                     NextEnemyUnitToMove.ClearPath();
@@ -235,15 +234,6 @@ namespace BattlefieldOneMono
 				NextEnemyUnitToMove.Sleep = true; //TODO: if allied unit comes in range, then wake and attack
 				EnemyUnitQueue.Dequeue();
 				NextEnemyUnitToMove = null;
-			}
-			else if (NextEnemyUnitToMove.Movement < 0.1)
-			{
-                /*
-				_log.Debug($"HandleEnemyUnitMove() unit is out of moves this turn [unit:{NextEnemyUnitToMove.UnitNumber}]");
-				_units.PlayerCheckForPossibleAttack(NextEnemyUnitToMove, _alliedEnemyMatrix);
-				EnemyUnitQueue.Dequeue();
-				NextEnemyUnitToMove = null;
-                */
 			}
 			else
 			{
@@ -356,29 +346,6 @@ namespace BattlefieldOneMono
 
 			AlliedUnitUnderAttack = null;
 			EnemyUnitAttacking = null;
-		}
-
-		private Unit FindNextUnitToMove(GameTime gameTime)
-		{
-			//_log.Debug("FindNextUnitToMove()");
-
-			var nextUnitToMove = FindEnemyUnitToMove();
-
-			/*
-			if (nextUnitToMove == null)
-				//_log.Debug("nextUnitToMove=null");
-			else
-				//_log.Debug("nextUnitToMove=" + nextUnitToMove.UnitNumber);
-			*/
-			// find a unit to attack
-			if (EnemyUnitAttacking == null)
-			{
-				FindEnemyUnitToAttackFrom();
-			}
-
-			//HandleEnemyAttackingAllied(gameTime);
-
-			return nextUnitToMove;
 		}
 
 		private Unit FindEnemyUnitToMove()
