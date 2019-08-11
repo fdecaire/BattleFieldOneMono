@@ -5,7 +5,7 @@ namespace BattlefieldOneMonoTests
 {
 	public class ShortestPathTests
 	{
-		[Fact(Skip = "Needs work")]
+		[Fact]
 		public void FindShortestPath()
 		{
 			var shortest = new ShortestPath();
@@ -29,9 +29,9 @@ namespace BattlefieldOneMonoTests
 			Assert.Equal(new Offset(4, 0), shortest.WayPoint[4]);
 			Assert.Equal(new Offset(5, 0), shortest.WayPoint[5]);
 			Assert.Equal(new Offset(6, 1), shortest.WayPoint[6]);
-			Assert.Equal(new Offset(6, 2), shortest.WayPoint[7]);
-			Assert.Equal(new Offset(6, 3), shortest.WayPoint[8]);
-			Assert.Equal(new Offset(7, 3), shortest.WayPoint[9]);
+			Assert.Equal(new Offset(7, 1), shortest.WayPoint[7]);
+			Assert.Equal(new Offset(8, 2), shortest.WayPoint[8]);
+			Assert.Equal(new Offset(8, 3), shortest.WayPoint[9]);
 			Assert.Equal(new Offset(8, 4), shortest.WayPoint[10]);
 		}
 
