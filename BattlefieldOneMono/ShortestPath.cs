@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using BattlefieldOneMono.Interfaces;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace BattlefieldOneMono
 {
@@ -39,6 +41,21 @@ namespace BattlefieldOneMono
 			FindPath();
 		}
 
+        public void Draw()
+        {
+            if (WayPoint == null)
+            {
+                return;
+            }
+
+            for (var i = 1; i < WayPoint.Count; i++)
+            {
+                GameContent.Sb.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                GraphicHelpers.DrawLine(WayPoint[i - 1].ToPixel, WayPoint[i].ToPixel, Color.Red, 6);
+                GameContent.Sb.End();
+            }
+        }
+
 		private void FindPath()
 		{
 			_iterations++;
@@ -72,11 +89,11 @@ namespace BattlefieldOneMono
 					var distance = node.G;
 					if (_terrainMap[mapCoordinates.Col, mapCoordinates.Row].Roads > 0)
 					{
-						distance += 0.5;
+						distance += 1;
 					}
 					else
 					{
-						distance += 1;
+						distance += 3;
 					}
 
 					if (_openList.Contains(mapCoordinates.Col, mapCoordinates.Row))

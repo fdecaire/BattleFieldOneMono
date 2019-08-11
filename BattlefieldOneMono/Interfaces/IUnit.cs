@@ -31,7 +31,8 @@ namespace BattlefieldOneMono.Interfaces
 		UnitFlash Flash { get; set; }
 		void NewTurn();
 		void Draw();
-		void DumpData();
+        void DrawPath();
+        void DumpData();
 		MapCoordinates GetNextWaypoint(int unitCol, int unitRow);
 	}
 }

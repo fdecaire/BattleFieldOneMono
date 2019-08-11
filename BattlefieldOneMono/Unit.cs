@@ -273,6 +273,11 @@ namespace BattlefieldOneMono
 			GameContent.Sb.End();
 		}
 
+        public void DrawPath()
+        {
+            _shortestPath.Draw();
+        }
+
 		public void DumpData()
 		{
 			/*

@@ -65,8 +65,25 @@ namespace BattlefieldOneMono
 		public void CreateMap()
 		{
 			var gameFileReader = new GameFileReader(_terrainMap,_units);
-			gameFileReader.ReadGameFile(@"BattlefieldOneMono.GameMaps.Game04.map");
-			RecomputeView();
+            gameFileReader.ReadGameFile(@"BattlefieldOneMono.GameMaps.Game04.map");
+            /*
+            _terrainMap.InitializeBoard(6, 6);
+
+            _terrainMap[1, 2].Roads = RoadType.Road2 | RoadType.Road5;
+            _terrainMap[2, 3].Roads = RoadType.Road2 | RoadType.Road5;
+            _terrainMap[3, 3].Roads = RoadType.Road3 | RoadType.Road5;
+            _terrainMap[4, 3].Roads = RoadType.Road2 | RoadType.Road6;
+            _terrainMap[5, 3].Roads = RoadType.Road5 | RoadType.Road1;
+            _terrainMap[5, 4].Roads = RoadType.Road1 | RoadType.Road4;
+            _terrainMap[5, 5].Roads = RoadType.Road4;
+
+            _terrainMap[1, 2].BackgroundType = 40;
+            _terrainMap[5, 5].BackgroundType = 40;
+
+            _units.Add(1, 2, 0, NATIONALITY.Germany);
+            _units.Add(5, 5, 0, NATIONALITY.USA);
+            */
+            RecomputeView();
 
 			if (_noMaskView)
 			{
@@ -525,6 +542,11 @@ namespace BattlefieldOneMono
 					}
 				}
 			}
-		}
+
+            foreach (var unit in _units)
+            {
+                //unit.DrawPath();
+            }
+        }
 	}
 }

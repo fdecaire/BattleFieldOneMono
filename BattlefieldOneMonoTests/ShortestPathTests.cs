@@ -35,7 +35,7 @@ namespace BattlefieldOneMonoTests
 			Assert.Equal(new Offset(8, 4), shortest.WayPoint[10]);
 		}
 
-		[Fact(Skip = "Needs work")]
+		[Fact]
 		public void UseRoads()
 		{
 			//https://www.redblobgames.com/pathfinding/a-star/introduction.html
@@ -43,22 +43,22 @@ namespace BattlefieldOneMonoTests
 			var map = new TerrainMap(shortest);
 			map.InitializeBoard(6, 6);
 
-			map[1, 2].Roads = RoadType.Road1;
-			map[2, 3].Roads = RoadType.Road1;
-			map[3, 3].Roads = RoadType.Road1;
-			map[4, 3].Roads = RoadType.Road1;
-			map[5, 3].Roads = RoadType.Road1;
-			map[5, 4].Roads = RoadType.Road1;
-			map[5, 5].Roads = RoadType.Road1;
+			map[1, 2].Roads = RoadType.Road2 | RoadType.Road5;
+			map[2, 3].Roads = RoadType.Road2 | RoadType.Road5;
+			map[3, 3].Roads = RoadType.Road3 | RoadType.Road5;
+			map[4, 3].Roads = RoadType.Road2 | RoadType.Road6;
+			map[5, 3].Roads = RoadType.Road5 | RoadType.Road1;
+			map[5, 4].Roads = RoadType.Road1 | RoadType.Road4;
+			map[5, 5].Roads = RoadType.Road4;
 
-			shortest.ComputeShortestPath(map, 1, 2, 5, 5, 0);
+            shortest.ComputeShortestPath(map, 1, 2, 5, 5, 0);
 
 			Assert.Equal(new Offset(2, 3), shortest.WayPoint[0]);
 			Assert.Equal(new Offset(3, 3), shortest.WayPoint[1]);
 			Assert.Equal(new Offset(4, 3), shortest.WayPoint[2]);
 			Assert.Equal(new Offset(5, 3), shortest.WayPoint[3]);
 			Assert.Equal(new Offset(5, 4), shortest.WayPoint[4]);
-			Assert.Equal(new Offset(5, 5), shortest.WayPoint[4]);
-		}
+			Assert.Equal(new Offset(5, 5), shortest.WayPoint[5]);
+        }
 	}
 }
