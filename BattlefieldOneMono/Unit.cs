@@ -140,6 +140,7 @@ namespace BattlefieldOneMono
 		public bool Sleep { get; set; }
 		public bool SkipTurn { get; set; }
 		public UnitFlash Flash { get; set; }
+        public int EnemyUnitMode { get; set; } // 0 = determining status, 1 = enemy attack flash, 2 = attacking, 3 = movement flash, 4 = moving
 
 		//private ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -187,7 +188,8 @@ namespace BattlefieldOneMono
 			GreenHilight = false;
 			IdleFlash = false;
 			SkipTurn = false;
-		}
+            EnemyUnitMode = 0;
+        }
 
 		public void Draw()
 		{

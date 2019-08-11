@@ -105,57 +105,95 @@ namespace BattlefieldOneMono
 		{
 			if (_units.CurrentTurn == NATIONALITY.Germany)
 			{
-				//TODO: need to detect when units are blocked or all idle.
+                //TODO: need to detect when units are blocked or all idle.
 
-				if (NextEnemyUnitToMove == null && EnemyUnitAttacking == null)
-				{
-					//_log.Debug("HandleEnemy() NextEnemyToMove = null");
-					// find another unit to move around the map
-					NextEnemyUnitToMove = FindNextUnitToMove(gameTime);
-
-					if (NextEnemyUnitToMove == null)
-					{
-						//_log.Debug("HandleEnemy() NextEnemyToMove is still null");
-					}
-					else
-					{
-						//_log.Debug("HandleEnemy() NextEnemyToMove=" + NextEnemyUnitToMove.Nationality);
-						_log.Debug($"HandleEnemyUnitMove() set unit flash [unit:{NextEnemyUnitToMove.UnitNumber}]");
-						NextEnemyUnitToMove.Flash = new UnitFlash(2, 0.2f, new Color(100, 200, 100));
-					}
-				}
-
-                if (EnemyUnitAttacking != null)
+                if (NextEnemyUnitToMove == null)
                 {
-                    HandleEnemyAttackingAllied(gameTime);
+                    NextEnemyUnitToMove = FindEnemyUnitToMove();
                 }
 
-				// this will move the enemy unit one space at a time
-				if (NextEnemyUnitToMove != null)
-				{
-					HandleEnemyUnitMove(visible);
-				}
+                if (NextEnemyUnitToMove != null)
+                {
+                    switch (NextEnemyUnitToMove.EnemyUnitMode)
+                    {
+                        case 0:
+                            if (_units.IsUnitWithinAttackRange(NextEnemyUnitToMove, _alliedEnemyMatrix))
+                            {
+                                NextEnemyUnitToMove.ClearPath();
+                                NextEnemyUnitToMove.Movement = 0;
+                                NextEnemyUnitToMove.Flash = null;
+                                FindEnemyUnitToAttackFrom();
+                                NextEnemyUnitToMove.EnemyUnitMode = 1;
+                                NextEnemyUnitToMove.Flash = new UnitFlash(2, 0.2f, new Color(200, 100, 100));
+                            }
+                            else
+                            {
+                                NextEnemyUnitToMove.EnemyUnitMode = 3;
+                            }
+                            break;
+                        case 1:
+                            if (!IsUnitFlashing(visible))
+                            {
+                                NextEnemyUnitToMove.EnemyUnitMode = 2;
+                            }
+                            break;
+                        case 2:
+                            if (HandleEnemyAttackingAllied(visible))
+                            {
+                                NextEnemyUnitToMove.EnemyUnitMode = 5;
+                            }
+                            break;
+                        case 3:
+                            NextEnemyUnitToMove.Flash = new UnitFlash(2, 0.2f, new Color(100, 200, 100));
+                            NextEnemyUnitToMove.EnemyUnitMode = 4;
+                            break;
+                        case 4:
+                            if (NextEnemyUnitToMove.Movement < 0.1)
+                            {
+                                //TODO: if within attack range
+                                if (_units.IsUnitWithinAttackRange(NextEnemyUnitToMove, _alliedEnemyMatrix))
+                                {
+                                    NextEnemyUnitToMove.ClearPath();
+                                    NextEnemyUnitToMove.Movement = 0;
+                                    NextEnemyUnitToMove.Flash = null;
+                                    FindEnemyUnitToAttackFrom();
+                                    NextEnemyUnitToMove.EnemyUnitMode = 1;
+                                    NextEnemyUnitToMove.Flash = new UnitFlash(2, 0.2f, new Color(200, 100, 100));
+                                    return;
+                                }
 
-				// forallunits((Movement == 0 && UnitHasAttackedThisTurn) || Sleep || SkipTurn)
-				if (_units.IsTurnComplete(NATIONALITY.Germany) || EnemyUnitQueue.Count == 0)
-				{
-					//_log.Debug("HandleEnemy() turn complete");
+                                NextEnemyUnitToMove.EnemyUnitMode = 5;
+                                return;
+                            }
 
-					_units.SetTurn(NATIONALITY.USA);
-					EnemyUnitAttacking = null;
-					AlliedUnitUnderAttack = null;
-					NextEnemyUnitToMove = null;
-				}
-			}
+                            if (!IsUnitFlashing(visible))
+                            {
+                                HandleEnemyUnitMove(visible);
+                            }
+                            break;
+                        case 5:
+                            EnemyUnitQueue.Dequeue();
+                            NextEnemyUnitToMove = null;
+                            break;
+
+                    }
+                }
+
+                // forallunits((Movement == 0 && UnitHasAttackedThisTurn) || Sleep || SkipTurn)
+                if (_units.IsTurnComplete(NATIONALITY.Germany) || EnemyUnitQueue.Count == 0)
+                {
+                    //_log.Debug("HandleEnemy() turn complete");
+
+                    _units.SetTurn(NATIONALITY.USA);
+                    EnemyUnitAttacking = null;
+                    AlliedUnitUnderAttack = null;
+                    NextEnemyUnitToMove = null;
+                }
+            }
         }
 
 		private void HandleEnemyUnitMove(bool visible)
 		{
-			if (IsUnitFlashing(visible))
-			{
-				return;
-			}
-
 			_log.Debug($"HandleEnemyUnitMove() set new coords from:{NextEnemyUnitToMove.Coordinates} movement={NextEnemyUnitToMove.Movement} [unit:{NextEnemyUnitToMove.UnitNumber}]");
 
 			if (NextEnemyUnitMoveCoords != null)
@@ -200,10 +238,12 @@ namespace BattlefieldOneMono
 			}
 			else if (NextEnemyUnitToMove.Movement < 0.1)
 			{
+                /*
 				_log.Debug($"HandleEnemyUnitMove() unit is out of moves this turn [unit:{NextEnemyUnitToMove.UnitNumber}]");
 				_units.PlayerCheckForPossibleAttack(NextEnemyUnitToMove, _alliedEnemyMatrix);
 				EnemyUnitQueue.Dequeue();
 				NextEnemyUnitToMove = null;
+                */
 			}
 			else
 			{
@@ -241,8 +281,8 @@ namespace BattlefieldOneMono
 			return false;
 		}
 
-		private void HandleEnemyAttackingAllied(GameTime gameTime)
-		{
+		private bool HandleEnemyAttackingAllied(bool visible)
+        {
 			//_log.Debug("HandleEnemyAttackingAllied()");
 			if (EnemyUnitAttacking != null && AlliedUnitUnderAttack != null)
 			{
@@ -276,14 +316,17 @@ namespace BattlefieldOneMono
 					EnemyUnitAttacking = null;
 					AlliedUnitUnderAttack = null;
 					_units.UnselectUnits();
-					
-				}
+
+                    return true;
+                }
 			}
 			else
 			{
 				// nobody left to attack
 			}
-		}
+
+            return false;
+        }
 
 		public void FindEnemyUnitToAttackFrom()
 		{
@@ -304,7 +347,8 @@ namespace BattlefieldOneMono
 							//_log.Debug("FindEnemyUnitToAttackFrom() allied unit under attack=" + alliedUnit.UnitNumber);
 							AlliedUnitUnderAttack = alliedUnit;
 							EnemyUnitAttacking = _units[i];
-							return;
+                            EnemyAttackFlash = 0;
+                            return;
 						}
 					}
 				}
@@ -330,10 +374,9 @@ namespace BattlefieldOneMono
 			if (EnemyUnitAttacking == null)
 			{
 				FindEnemyUnitToAttackFrom();
-				EnemyAttackFlash = 0;
 			}
 
-			HandleEnemyAttackingAllied(gameTime);
+			//HandleEnemyAttackingAllied(gameTime);
 
 			return nextUnitToMove;
 		}
