@@ -68,7 +68,7 @@ namespace BattlefieldOneMono
 		public void CreateMap()
 		{
 			var gameFileReader = new GameFileReader(_terrainMap,_units);
-            gameFileReader.ReadGameFile(@"BattlefieldOneMono.GameMaps.Game04.map");
+            gameFileReader.ReadGameFile(@"BattlefieldOneMono.GameMaps.Game03.map");
             RecomputeView();
 
 			if (_noMaskView)
@@ -459,16 +459,19 @@ namespace BattlefieldOneMono
 				if (unit.TurnComplete && unit.Sleep == false)
 				{
 					unit.Selected = false;
-					return;
+                    unit.Flash = null;
+
+                    return;
 				}
 
 				// unselect previously selected unit
 				foreach (var otherUnit in _units)
 				{
-					if (otherUnit != unit && otherUnit.Selected)
+					if (otherUnit != unit)
 					{
 						otherUnit.Selected = false;
-					}
+                        otherUnit.Flash = null;
+                    }
 				}
 
 				unit.Selected = true;
@@ -499,8 +502,6 @@ namespace BattlefieldOneMono
 				}
 			}
 		}
-
-
 
 		public void Draw()
 		{
